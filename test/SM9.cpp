@@ -1,8 +1,8 @@
-#include "BaseX.h"
-#include "SMX.h"
-
 #include <cassert>
 #include <iostream>
+
+#include "BaseX.h"
+#include "SMX.h"
 
 using namespace std;
 

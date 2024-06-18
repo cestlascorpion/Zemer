@@ -1,12 +1,11 @@
-#include "BaseX.h"
-
 #include <assert.h>
+
+#include "BaseX.h"
 
 using namespace std;
 
 void TestBase16() {
     {
-
         string str = "Hello, World!";
         string encoded = BaseEncoding::Base16Encode(str);
         assert(encoded == "48656C6C6F2C20576F726C6421");
