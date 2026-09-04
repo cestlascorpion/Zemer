@@ -1,26 +1,44 @@
 cmake_minimum_required(VERSION 3.16)
-project(Zemer)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -Wsizeof-pointer-memaccess \
-                     -Wfloat-equal -Wconversion-null -Woverflow -Wshadow -faligned-new\
-                     -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -pthread -g -O0")
+project(Zemer LANGUAGES CXX)
 
-include_directories(src test)
-link_directories(/usr/local/lib)
+find_package(Threads REQUIRED)
+find_path(GMSSL_INCLUDE_DIR gmssl/sm2.h PATHS /usr/local/include)
+find_library(GMSSL_LIBRARY NAMES gmssl PATHS /usr/local/lib)
 
-file(GLOB_RECURSE SRCS src/*.cpp)
-file(GLOB_RECURSE HDRS src/*.h)
+if(NOT GMSSL_INCLUDE_DIR OR NOT GMSSL_LIBRARY)
+    message(FATAL_ERROR "GmSSL headers and library are required")
+endif()
 
-add_library(gmsslx STATIC ${SRCS} ${HDRS})
-enable_testing()
+set(PROJECT_WARNINGS
+    -Wall
+    -Wextra
+    -Wconversion
+    -Wsizeof-pointer-memaccess
+    -Wfloat-equal
+    -Wconversion-null
+    -Woverflow
+    -Wshadow
+    -faligned-new)
 
-foreach (_target
-        Encoding
-        SM2
-        SM3+4
-        SM9)
-    add_executable(${_target} "test/${_target}.cpp")
-    target_link_libraries(${_target} gmsslx gmssl)
-    add_test(NAME ${_target} COMMAND ${_target})
-endforeach ()
+file(GLOB_RECURSE ZEMER_SOURCES CONFIGURE_DEPENDS src/*.cpp)
+file(GLOB_RECURSE ZEMER_HEADERS CONFIGURE_DEPENDS src/*.h)
+
+add_library(gmsslx STATIC ${ZEMER_SOURCES} ${ZEMER_HEADERS})
+set_target_properties(gmsslx PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED YES CXX_EXTENSIONS NO)
+target_compile_definitions(gmsslx PRIVATE _FILE_OFFSET_BITS=64 _GNU_SOURCE)
+target_compile_features(gmsslx PUBLIC cxx_std_17)
+target_compile_options(gmsslx PRIVATE ${PROJECT_WARNINGS} -g -O0)
+target_include_directories(gmsslx PUBLIC src PRIVATE ${GMSSL_INCLUDE_DIR})
+target_link_libraries(gmsslx PUBLIC Threads::Threads)
+
+include(CTest)
+if(BUILD_TESTING)
+    foreach(target Encoding SM2 SM3+4 SM9)
+        add_executable(${target} test/${target}.cpp)
+        target_compile_options(${target} PRIVATE ${PROJECT_WARNINGS} -g -O0)
+        target_include_directories(${target} PRIVATE test)
+        target_link_libraries(${target} PRIVATE gmsslx ${GMSSL_LIBRARY})
+        add_test(NAME ${target} COMMAND ${target})
+    endforeach()
+endif()

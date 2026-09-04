@@ -1,20 +1,18 @@
-# Ze'mer
+# Zemer
 
-Ze'mer is a C++17 wrapper around [GmSSL v3.1.1](https://github.com/guanzhi/GmSSL.git). It provides convenient APIs for SM2, SM3, SM4, SM9, and Base16, Base32, and Base64 encoding.
+Zemer is a C++17 wrapper for GmSSL v3.1.1 that exposes SM2, SM3, SM4, SM9, and Base16, Base32, and Base64 helpers.
 
-## Prerequisites
+## Requirements
 
-- A C++17 compiler
 - CMake 3.16 or later
-- GmSSL v3.1.1 headers and library installed locally
-
-The default CMake configuration links GmSSL from `/usr/local/lib`. Ensure the GmSSL headers are available in the compiler include path.
+- A C++17 compiler
+- GmSSL headers and library
 
 ## Build
 
 ```sh
 cmake -S . -B build
-cmake --build build -j
+cmake --build build
 ```
 
 ## Test
@@ -22,5 +20,3 @@ cmake --build build -j
 ```sh
 ctest --test-dir build --output-on-failure
 ```
-
-The test executables cover encoding and the supported SM2, SM3, SM4, and SM9 operations.
