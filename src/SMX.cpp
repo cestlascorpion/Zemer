@@ -540,24 +540,24 @@ int SMX::SM9EncryptMasterKeyGen(const string &pass, FILE *pub, FILE *pem) {
 int SMX::SM9SignUserKeyGen(const string &masterPass, FILE *masterPem, const string &userPass, FILE *userPem,
                            const string &id) {
     if (masterPass.empty() || masterPem == nullptr || userPass.empty() || userPem == nullptr) {
-        return {};
+        return -1;
     }
     SM9_SIGN_MASTER_KEY sign_msk;
     auto ret = sm9_sign_master_key_info_decrypt_from_pem(&sign_msk, masterPass.c_str(), masterPem);
     // assert(ret == 1 && "sm9_sign_master_key_info_decrypt_from_pem error");
     if (ret != 1) {
-        return {};
+        return -1;
     }
     SM9_SIGN_KEY sign_key;
     ret = sm9_sign_master_key_extract_key(&sign_msk, id.c_str(), id.size(), &sign_key);
     // assert(ret == 1 && "sm9_sign_master_key_extract_key error");
     if (ret != 1) {
-        return {};
+        return -1;
     }
     ret = sm9_sign_key_info_encrypt_to_pem(&sign_key, userPass.c_str(), userPem);
     // assert(ret == 1 && "sm9_sign_key_info_encrypt_to_pem error");
     if (ret != 1) {
-        return {};
+        return -1;
     }
     return 0;
 }
@@ -565,24 +565,24 @@ int SMX::SM9SignUserKeyGen(const string &masterPass, FILE *masterPem, const stri
 int SMX::SM9EncryptUserKeyGen(const string &masterPass, FILE *masterPem, const string &userPass, FILE *userPem,
                               const string &id) {
     if (masterPass.empty() || masterPem == nullptr || userPass.empty() || userPem == nullptr) {
-        return {};
+        return -1;
     }
     SM9_ENC_MASTER_KEY enc_msk;
     auto ret = sm9_enc_master_key_info_decrypt_from_pem(&enc_msk, masterPass.c_str(), masterPem);
     // assert(ret == 1 && "sm9_enc_master_key_info_decrypt_from_pem error");
     if (ret != 1) {
-        return {};
+        return -1;
     }
     SM9_ENC_KEY enc_key;
     ret = sm9_enc_master_key_extract_key(&enc_msk, id.c_str(), id.size(), &enc_key);
     // assert(ret == 1 && "sm9_enc_master_key_extract_key error");
     if (ret != 1) {
-        return {};
+        return -1;
     }
     ret = sm9_enc_key_info_encrypt_to_pem(&enc_key, userPass.c_str(), userPem);
     // assert(ret == 1 && "sm9_enc_key_info_encrypt_to_pem error");
     if (ret != 1) {
-        return {};
+        return -1;
     }
     return 0;
 }

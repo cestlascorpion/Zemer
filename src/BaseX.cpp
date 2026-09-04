@@ -170,6 +170,8 @@ string BaseEncoding::Base16Decode(const string &str) {
         // Convert ASCII to Base16
         a = base16[a];
         b = base16[b];
+        if (a == 0xFF || b == 0xFF)
+            return {};
 
         result[j++] = ((a << 4) | b);
     }
@@ -294,8 +296,26 @@ string BaseEncoding::Base64Decode(const string &str) {
     size_t ilength = str.length();
 
     // assert((ilength % 4 == 0) && "Invalid Base64 string!");
+    if (ilength == 0)
+        return {};
     if (ilength % 4 != 0)
         return {};
+
+    size_t padding = 0;
+    if (str[ilength - 1] == '=')
+        padding++;
+    if (str[ilength - 2] == '=')
+        padding++;
+    for (size_t i = 0; i < ilength - padding; ++i) {
+        uint8_t ch = (uint8_t)str[i];
+        if (!((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || ch == '+' ||
+              ch == '/'))
+            return {};
+    }
+    for (size_t i = ilength - padding; i < ilength; ++i) {
+        if (str[i] != '=')
+            return {};
+    }
 
     size_t olength = ilength / 4 * 3;
 

@@ -13,6 +13,7 @@ file(GLOB_RECURSE SRCS src/*.cpp)
 file(GLOB_RECURSE HDRS src/*.h)
 
 add_library(gmsslx STATIC ${SRCS} ${HDRS})
+enable_testing()
 
 foreach (_target
         Encoding
@@ -20,5 +21,6 @@ foreach (_target
         SM3+4
         SM9)
     add_executable(${_target} "test/${_target}.cpp")
-    target_link_libraries(${_target} ${PROJECT_BINARY_DIR}/libgmsslx.a gmssl)
+    target_link_libraries(${_target} gmsslx gmssl)
+    add_test(NAME ${_target} COMMAND ${_target})
 endforeach ()

@@ -40,6 +40,7 @@ void TestSM3() {
 
 void TestSM4() {
     const string key = "207CF410532F92A4";
+    const string hmacKey = "207CF410532F92A40123456789ABCDEF0123456789ABCDEF";
     const string iv = "EA44EBD043D018FB";
     {
         const string str = "A";
@@ -107,40 +108,40 @@ void TestSM4() {
     cout << "Test SM4GCM Pass" << endl;
     {
         const string str = "A";
-        auto cipher = SMX::SM4CBCAndSM3HMACEncrypt(str, key, iv, aad);
-        auto plain = SMX::SM4CBCAndSM3HMACDecrypt(cipher, key, iv, aad);
-        assert(plain != str);
+        auto cipher = SMX::SM4CBCAndSM3HMACEncrypt(str, hmacKey, iv, aad);
+        auto plain = SMX::SM4CBCAndSM3HMACDecrypt(cipher, hmacKey, iv, aad);
+        assert(plain == str);
     }
     {
         const string str = "ABCD";
-        auto cipher = SMX::SM4CBCAndSM3HMACEncrypt(str, key, iv, aad);
-        auto plain = SMX::SM4CBCAndSM3HMACDecrypt(cipher, key, iv, aad);
-        assert(plain != str);
+        auto cipher = SMX::SM4CBCAndSM3HMACEncrypt(str, hmacKey, iv, aad);
+        auto plain = SMX::SM4CBCAndSM3HMACDecrypt(cipher, hmacKey, iv, aad);
+        assert(plain == str);
     }
     {
         const string str = "ABCDABCDABCDABCD";
-        auto cipher = SMX::SM4CBCAndSM3HMACEncrypt(str, key, iv, aad);
-        auto plain = SMX::SM4CBCAndSM3HMACDecrypt(cipher, key, iv, aad);
-        assert(plain != str);
+        auto cipher = SMX::SM4CBCAndSM3HMACEncrypt(str, hmacKey, iv, aad);
+        auto plain = SMX::SM4CBCAndSM3HMACDecrypt(cipher, hmacKey, iv, aad);
+        assert(plain == str);
     }
     cout << "Test SM4CBC + SM3HMAC Pass" << endl;
     {
         const string str = "A";
-        auto cipher = SMX::SM4CTRAndSM3HMACEncrypt(str, key, iv, aad);
-        auto plain = SMX::SM4CTRAndSM3HMACDecrypt(cipher, key, iv, aad);
-        assert(plain != str);
+        auto cipher = SMX::SM4CTRAndSM3HMACEncrypt(str, hmacKey, iv, aad);
+        auto plain = SMX::SM4CTRAndSM3HMACDecrypt(cipher, hmacKey, iv, aad);
+        assert(plain == str);
     }
     {
         const string str = "ABCD";
-        auto cipher = SMX::SM4CTRAndSM3HMACEncrypt(str, key, iv, aad);
-        auto plain = SMX::SM4CTRAndSM3HMACDecrypt(cipher, key, iv, aad);
-        assert(plain != str);
+        auto cipher = SMX::SM4CTRAndSM3HMACEncrypt(str, hmacKey, iv, aad);
+        auto plain = SMX::SM4CTRAndSM3HMACDecrypt(cipher, hmacKey, iv, aad);
+        assert(plain == str);
     }
     {
         const string str = "ABCDABCDABCDABCD";
-        auto cipher = SMX::SM4CTRAndSM3HMACEncrypt(str, key, iv, aad);
-        auto plain = SMX::SM4CTRAndSM3HMACDecrypt(cipher, key, iv, aad);
-        assert(plain != str);
+        auto cipher = SMX::SM4CTRAndSM3HMACEncrypt(str, hmacKey, iv, aad);
+        auto plain = SMX::SM4CTRAndSM3HMACDecrypt(cipher, hmacKey, iv, aad);
+        assert(plain == str);
     }
     cout << "Test SM4CTR + SM3HMAC Pass" << endl;
 }

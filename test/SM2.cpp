@@ -22,7 +22,7 @@ void TestSM2() {
         auto ret = SMX::SM2KeyGen(password, pub, pem);
         fclose(pub);
         fclose(pem);
-        assert(ret == 0 || "Failed to generate SM2 key pair");
+        assert(ret == 0 && "Failed to generate SM2 key pair");
         cout << "SM2 key pair generated successfully" << endl;
     }
     {
@@ -34,7 +34,7 @@ void TestSM2() {
         }
         auto signature = SMX::SM2Sign(message, pem, password, "abcdefg");
         fclose(pem);
-        assert(!signature.empty() || "Failed to sign message");
+        assert(!signature.empty() && "Failed to sign message");
         cout << "Message signed successfully" << endl;
 
         auto pub = fopen("sm2.pub", "r");
@@ -44,7 +44,7 @@ void TestSM2() {
         }
         auto ret = SMX::SM2Verify(message, signature, pub, "abcdefg");
         fclose(pub);
-        assert(ret == 0 || "Failed to verify signature");
+        assert(ret == 0 && "Failed to verify signature");
         cout << "Signature verified successfully" << endl;
     }
     {
@@ -56,7 +56,7 @@ void TestSM2() {
         }
         auto encrypted = SMX::SM2Encrypt(message, pub);
         fclose(pub);
-        assert(!encrypted.empty() || "Failed to encrypt message");
+        assert(!encrypted.empty() && "Failed to encrypt message");
         cout << "Message encrypted successfully" << endl;
 
         auto pem = fopen("sm2.pem", "r");
@@ -66,7 +66,7 @@ void TestSM2() {
         }
         auto decrypted = SMX::SM2Decrypt(encrypted, pem, password);
         fclose(pem);
-        assert(decrypted == message || "Failed to decrypt message");
+        assert(decrypted == message && "Failed to decrypt message");
         cout << "Message decrypted successfully" << endl;
     }
 }

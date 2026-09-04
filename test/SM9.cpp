@@ -24,7 +24,7 @@ void TestSM9() {
         auto ret = SMX::SM9SignMasterKeyGen(masterPass, mpub, mpem);
         fclose(mpub);
         fclose(mpem);
-        assert(ret == 0 || "Failed to generate SM9 sign master key pair");
+        assert(ret == 0 && "Failed to generate SM9 sign master key pair");
         cout << "SM9 sign master key pair generated successfully" << endl;
 
         {
@@ -41,7 +41,7 @@ void TestSM9() {
             ret = SMX::SM9SignUserKeyGen(masterPass, mpem, userPass, upem, identity);
             fclose(mpem);
             fclose(upem);
-            assert(ret == 0 || "Failed to generate SM9 sign user key pair");
+            assert(ret == 0 && "Failed to generate SM9 sign user key pair");
             cout << "SM9 sign user key pair generated successfully" << endl;
 
             {
@@ -52,7 +52,7 @@ void TestSM9() {
                 }
                 auto sigature = SMX::SM9Sign("Hello, world!", upem, userPass);
                 fclose(upem);
-                assert(sigature.size() > 0 || "Failed to sign message");
+                assert(sigature.size() > 0 && "Failed to sign message");
                 cout << "Message signed successfully" << endl;
 
                 mpub = fopen("sm9sign.master.pub", "r");
@@ -62,7 +62,7 @@ void TestSM9() {
                 }
                 auto verify = SMX::SM9Verify("Hello, world!", sigature, mpub, identity);
                 fclose(mpub);
-                assert(verify == 0 || "Failed to verify message");
+                assert(verify == 0 && "Failed to verify message");
                 cout << "Message verified successfully" << endl;
             }
         }
@@ -81,7 +81,7 @@ void TestSM9() {
         auto ret = SMX::SM9EncryptMasterKeyGen(masterPass, mpub, mpem);
         fclose(mpub);
         fclose(mpem);
-        assert(ret == 0 || "Failed to generate SM9 encrypt master key pair");
+        assert(ret == 0 && "Failed to generate SM9 encrypt master key pair");
         cout << "SM9 encrypt master key pair generated successfully" << endl;
 
         {
@@ -98,7 +98,7 @@ void TestSM9() {
             ret = SMX::SM9EncryptUserKeyGen(masterPass, mpem, userPass, upem, identity);
             fclose(mpem);
             fclose(upem);
-            assert(ret == 0 || "Failed to generate SM9 encrypt user key pair");
+            assert(ret == 0 && "Failed to generate SM9 encrypt user key pair");
             cout << "SM9 encrypt user key pair generated successfully" << endl;
 
             {
@@ -109,7 +109,7 @@ void TestSM9() {
                 }
                 auto ciphertext = SMX::SM9Encrypt("Hello, world!", mpub, identity);
                 fclose(mpub);
-                assert(ciphertext.size() > 0 || "Failed to encrypt message");
+                assert(ciphertext.size() > 0 && "Failed to encrypt message");
                 cout << "Message encrypted successfully" << endl;
 
                 upem = fopen("sm9enc.user.pem", "r");
@@ -119,8 +119,8 @@ void TestSM9() {
                 }
                 auto plaintext = SMX::SM9Decrypt(ciphertext, userPass, upem, identity);
                 fclose(upem);
-                assert(plaintext.size() > 0 || "Failed to decrypt message");
-                assert(plaintext == "Hello, world!" || "Failed to decrypt message");
+                assert(plaintext.size() > 0 && "Failed to decrypt message");
+                assert(plaintext == "Hello, world!" && "Failed to decrypt message");
                 cout << "Message decrypted successfully" << endl;
             }
         }
